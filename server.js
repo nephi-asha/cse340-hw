@@ -3,7 +3,7 @@ require("dotenv").config()
 const app = express()
 const expressLayouts = require("express-ejs-layouts")
 const session = require("express-session")
-const bodyParser = require("body-parser")
+
 const cookieParser = require("cookie-parser")
 
 const staticRoute = require("./routes/static") 
@@ -48,8 +48,8 @@ app.use(function(req, res, next){
 
 app.use(utilities.checkJWTToken)
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 
 app.set("view engine", "ejs")
@@ -80,7 +80,6 @@ app.use(async (err, req, res, next) => {
       nav
     })
 })
-
 
 const port = process.env.PORT || 5000
 const host = process.env.HOST || '0.0.0.0'
