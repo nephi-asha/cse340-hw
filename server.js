@@ -10,6 +10,7 @@ const staticRoute = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
+const reviewRoute = require("./routes/review-route")
 const utilities = require("./utilities/")
 const pool = require("./database")
 
@@ -63,21 +64,30 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 
 app.use("/inv", utilities.handleErrors(inventoryRoute))
 app.use("/account", utilities.handleErrors(accountRoute))
+app.use("/reviews", utilities.handleErrors(reviewRoute))
 
+
+const { NotFound } = require("./utilities/errors");
 
 app.use(async (req, res, next) => {
-  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
+  next(new NotFound('Sorry, we appear to have lost that page.'))
 })
 
 app.use(async (err, req, res, next) => {
   let nav = '<ul><li><a href="/" title="Home">Home</a></li></ul>'
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  if (isDevelopment) {
+    console.error(err)
+  } else {
+    console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  }
   let message 
-  if(err.status == 404){ message = err.message} else {message = utilities.getWittyMessage()}
+  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
   res.render("errors/error", {
       title: err.status || 'Server Error',
       message,
-      nav
+      nav,
+      error: isDevelopment ? err : null
     })
 })
 

@@ -1,3 +1,10 @@
 <% title %>
 <h1><%= title %></h1>
+<%- messages() %>
 <%- detail %>
+
+<hr>
+
+<%- include('../partials/reviews', { reviews: reviews }) %>
+
+<%- include('../partials/review-form', { inv_id: inv_id, errors: errors, review_text: locals.review_text }) %>

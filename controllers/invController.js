@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const reviewModel = require("../models/review-model")
 const utilities = require("../utilities/")
 
 const invCont = {}
@@ -19,12 +20,16 @@ invCont.buildByClassificationId = async function (req, res, next) {
 invCont.buildByInventoryId = async function (req, res, next) {
     const inventory_id = req.params.inventoryId
     const inventoryDetails = await invModel.getInventoryItemByInventoryId(inventory_id)
+    const reviews = await reviewModel.getReviewsByInventoryId(inventory_id)
     const detail = await utilities.buildInventoryDetail(inventoryDetails)
     let nav = await utilities.getNav()
     res.render(`./inventory/detail`, {
         title: inventoryDetails.inv_make,
         nav,
-        detail
+        detail,
+        reviews,
+        inv_id: inventory_id,
+        errors: null
     }) 
 }
 
@@ -187,11 +192,15 @@ invCont.updateFavorite = async function (req, res, next) {
     }
 
     const detail = await utilities.buildInventoryDetail(inventoryDetails)
+    const reviews = await reviewModel.getReviewsByInventoryId(inventory_id)
     
     res.render(`./inventory/detail`, {
         title: inventoryDetails.inv_make,
         nav,
-        detail
+        detail,
+        reviews,
+        inv_id: inventory_id,
+        errors: null
     }) 
 }
 

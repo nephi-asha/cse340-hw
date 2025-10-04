@@ -352,3 +352,41 @@ footer {
     color: var(--accent-red);
     font-weight: bold;
 }
+
+/* Error Page Styles */
+.error-container {
+    text-align: center;
+    margin: 4rem auto;
+    padding: 2rem;
+    max-width: 600px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.error-title {
+    color: var(--accent-red);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.error-home-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--site-black);
+    color: var(--primary-white);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.error-home-link:hover {
+    background-color: var(--accent-red);
+}

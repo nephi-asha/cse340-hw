@@ -1,0 +1,16 @@
+<% if (reviews && reviews.length > 0) { %>
+    <div class="reviews-container">
+        <h2>Customer Reviews</h2>
+        <ul class="reviews-list">
+            <% reviews.forEach(review => { %>
+                <li class="review-item">
+                    <div class="review-text"><%= review.review_text %></div>
+                    <div class="review-author">- <%= review.account_firstname %> <%= review.account_lastname %></div>
+                    <div class="review-date"><%= new Date(review.review_date).toLocaleDateString() %></div>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+<% } else { %>
+    <p>Be the first to leave a review!</p>
+<% } %>

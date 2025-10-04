@@ -1,6 +1,7 @@
 const utilities = require(".")
 const { body, validationResult } = require("express-validator")
 const invModel = require('../models/inventory-model') 
+const reviewModel = require('../models/review-model') 
 const invValidate = {}
 
 
@@ -178,6 +179,38 @@ invValidate.checkIDinFavoritesForm = async (req, res, next) => {
             nav,
             detail
         }) 
+        return
+    }
+    next()
+}
+
+invValidate.reviewRules = () => {
+    return [
+        body('review_text')
+        .trim()
+        .notEmpty()
+        .withMessage('Review text cannot be empty.')
+    ]
+}
+
+invValidate.checkReviewData = async (req, res, next) => {
+    const { review_text, inv_id } = req.body
+    let errors = []
+    errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav()
+        const inventoryDetails = await invModel.getInventoryItemByInventoryId(inv_id)
+        const reviews = await reviewModel.getReviewsByInventoryId(inv_id)
+        const detail = await utilities.buildInventoryDetail(inventoryDetails)
+        res.render("inventory/detail", {
+            title: inventoryDetails.inv_make,
+            nav,
+            detail,
+            reviews,
+            inv_id,
+            errors,
+            review_text
+        })
         return
     }
     next()
