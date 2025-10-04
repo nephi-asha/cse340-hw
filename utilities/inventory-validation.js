@@ -91,14 +91,16 @@ invValidate.favoritesAddingRules = () => {
 }
 
 invValidate.checkClassificationName = async (req , res , next) => {
+    const { classification_name } = req.body
     let errors = []
     errors = validationResult(req)
         if (!errors.isEmpty()) {
             let nav = await utilities.getNav()
-            res.render("inventory/management", {
-                title: "Management",
+            res.render("inventory/addClassification", {
+                title: "New Classification",
                 nav,
-                errors
+                errors,
+                classification_name,
             })
             return
     }
