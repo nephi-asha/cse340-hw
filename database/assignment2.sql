@@ -15,7 +15,6 @@ WHERE account_id=1;
 
 DELETE FROM public.account WHERE account_id=1;
 
--- "a huge interior" rather than "small interiors"
 UPDATE public.inventory
 SET inv_description = REPLACE(inv_description, 'the small interiors', 'a huge interior')
 WHERE inv_description LIKE '%the small interiors%';
@@ -30,6 +29,6 @@ ON cs.classification_name = inventory.inv_model;
 
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_image, '/images', '/images/vehicles'),
-	inv_thumbnail = REPLACE(inv_thumbnail, '/images', '/images/vahicles')
+	inv_thumbnail = REPLACE(inv_thumbnail, '/images', '/images/vehicles')
 WHERE 
 	inv_image LIKE '/images%' OR inv_thumbnail LIKE '/images%'

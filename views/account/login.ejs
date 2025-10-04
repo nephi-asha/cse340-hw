@@ -1,0 +1,23 @@
+<% title %>
+<h1><%= title %></h1>
+<%- messages() %>
+<div class="account-form">
+    <form id="loginForm" action="/account/login" method="post">
+        <label for="account_email">Email: <br>
+            <input type="email" id="account_email" name="account_email" placeholder="joe@cse.com" required>
+        </label>
+       
+        
+        <label for="account_password">Password: <br>
+            <span>Password must be at least 12 characters, must contain at least a number,a lowercase letter, a capital letter, and a non-alphanumeric character.</span>
+            <div class="password-field-container">
+                <input type="password" id="account_password" name="account_password" placeholder="Password" required>
+                <!-- <button id="hide-show-btn">Show</button> -->
+            </div>
+        </label>
+        
+        
+        <button type="submit">Login</button>
+    </form>
+    <span class="sign-up-text">No account? <a href="/account/signup">Sign up</a></span>
+</div>

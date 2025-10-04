@@ -1,42 +1,89 @@
-/* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
- *******************************************/
-/* ***********************
- * Require Statements
- *************************/
 const express = require("express")
-const expressLayouts = require("express-ejs-layouts")
-const env = require("dotenv").config()
+require("dotenv").config() 
 const app = express()
-const static = require("./routes/static")
+const expressLayouts = require("express-ejs-layouts")
+const session = require("express-session")
+const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+
+const staticRoute = require("./routes/static") 
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
+const accountRoute = require("./routes/accountRoute")
+const utilities = require("./utilities/")
+const pool = require("./database")
 
-/* ***********************
- * View zngine setup
- *************************/
+app.use(cookieParser())
+
+app.use(session({
+  store: new (require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  name: 'sessionId',
+}))
+
+app.use(require('connect-flash')())
+
+app.use(function(req, res, next){
+  res.locals.messages = () => {
+    const messages = req.flash();
+    let html = '';
+    if (Object.keys(messages).length > 0) {
+      html += '<ul class="notice">';
+      for (const type in messages) {
+        messages[type].forEach(message => {
+          html += `<li>${message}</li>`;
+        });
+      }
+      html += '</ul>';
+    }
+    return html;
+  };
+  next();
+})
+
+app.use(utilities.checkJWTToken)
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout")
 
-/* ***********************
- * Routes
- *************************/
-app.use(static)
 
-app.get("/", baseController.buildHome)
-app.use("/inv", inventoryRoute)
-/* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
-const port = process.env.PORT
-const host = process.env.HOST
+app.use(staticRoute)
 
-/* ***********************
- * Log statement to confirm server operation
- *************************/
+app.get("/", utilities.handleErrors(baseController.buildHome))
+
+app.use("/inv", utilities.handleErrors(inventoryRoute))
+app.use("/account", utilities.handleErrors(accountRoute))
+
+
+app.use(async (req, res, next) => {
+  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
+})
+
+app.use(async (err, req, res, next) => {
+  let nav = '<ul><li><a href="/" title="Home">Home</a></li></ul>'
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  let message 
+  if(err.status == 404){ message = err.message} else {message = utilities.getWittyMessage()}
+  res.render("errors/error", {
+      title: err.status || 'Server Error',
+      message,
+      nav
+    })
+})
+
+
+const port = process.env.PORT || 5000
+const host = process.env.HOST || '0.0.0.0'
+
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
 })

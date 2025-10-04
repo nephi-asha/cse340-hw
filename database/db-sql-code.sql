@@ -50,20 +50,7 @@ VALUES ('Custom'),
 	('Truck'),
 	('Sedan');
 
--- Data for table `inventory`
-
-INSERT INTO public.inventory (
-    inv_make,
-    inv_model,
-    inv_year,
-    inv_description,
-    inv_image,
-    inv_thumbnail,
-    inv_price,
-    inv_miles,
-    inv_color,
-    classification_id
-  )
+INSERT INTO public.inventory (inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id)
 VALUES   (
     'Chevy',
     'Camaro',
@@ -238,6 +225,6 @@ WHERE inv_description LIKE '%the small interiors%';
 
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_image, '/images', '/images/vehicles'),
-	inv_thumbnail = REPLACE(inv_thumbnail, '/images', '/images/vahicles')
+	inv_thumbnail = REPLACE(inv_thumbnail, '/images', '/images/vehicles')
 WHERE 
 	inv_image LIKE '/images%' OR inv_thumbnail LIKE '/images%'

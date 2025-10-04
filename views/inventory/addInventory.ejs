@@ -1,0 +1,45 @@
+<% title %>
+<h1><%= title %></h1>
+<%- messages() %>
+<% if (errors) { %>
+    <ul class="notice">
+   <% errors.array().forEach(error => { %>
+     <li><%= error.msg %></li>
+  <%  }) %>
+   </ul>
+  <% } %>
+<div class="account-form">
+    <form action="/inv/add-inventory" method="post">
+        <label for="classification_id">Classification: <br></label>
+            <%- classificationList %>
+        
+        <label for="inv_make">Make: <br></label>
+            <input type="text" name="inv_make" id="inv_make" required value="<%= locals.inv_make %>">
+        
+        <label for="inv_model">Model: <br></label>
+            <input type="text" name="inv_model" id="inv_model" required value="<%= locals.inv_model %>">
+        
+        <label for="inv_year">Year: <br></label>
+            <input type="number" name="inv_year" id="inv_year" required value="<%= locals.inv_year %>" pattern="\d{4}" >
+        
+        <label for="inv_description">Description: <br></label>
+            <textarea name="inv_description" id="inv_description" required><%= locals.inv_description %></textarea>
+        
+        <label for="inv_image">Image Path: <br></label>
+            <input type="text" name="inv_image" id="inv_image" required value="<%= locals.inv_image || "/images/vehicles/no-image.jpg" %>">
+        
+        <label for="inv_thumbnail">Thumbnail Path: <br></label>
+            <input type="text" name="inv_thumbnail" id="inv_thumbnail" required value="<%= locals.inv_thumbnail || "/images/vehicles/no-image-tn.jpg"%>">
+        
+        <label for="inv_price">Price: <br></label>
+            <input type="number" name="inv_price" id="inv_price" required value="<%= locals.inv_price %>">
+        
+        <label for="inv_miles">Mileage: <br></label>
+            <input type="number" name="inv_miles" id="inv_miles" required value="<%= locals.inv_miles %>">
+        
+        <label for="inv_color">Color: <br> </label>
+            <input type="text" name="inv_color" id="inv_color" required value="<%= locals.inv_color %>">
+        
+        <button type="submit"> Add Inventory</button>
+    </form>
+</div>
